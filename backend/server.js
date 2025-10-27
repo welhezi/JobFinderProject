@@ -21,6 +21,7 @@ const express = require('express')
   const userRouter = require("./Routes/userRoute")
   const employeeRouter = require("./Routes/EmployeeRoute")
   const jobPostRoutes = require("./Routes/JobPostRoute");
+  const applicationRoutes = require("./Routes/ApplicationRoute");
 
   // Activer CORS
   //app.use(cors());
@@ -28,6 +29,7 @@ const express = require('express')
   app.use("/user",userRouter)
   app.use("/employee",employeeRouter)
   app.use("/jobpost", jobPostRoutes);
+  app.use("/app", applicationRoutes);
 
   app.listen(port, function() {
   console.log(`The server is running,’+’please open at http://localhost:${port}`)

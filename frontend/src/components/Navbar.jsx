@@ -1,7 +1,24 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { logoutAction } from '../redux/actions/userAction'
 
 const Navbar = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(logoutAction());
+      navigate("/"); // redirige vers la page d’accueil après logout
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
+
   return (
   
   <header>
@@ -13,7 +30,7 @@ const Navbar = () => {
             <div className="col-lg-3 col-md-2">
               {/* Logo */}
               <div className="logo">
-                <a href="index.html"><img src="assets/img/logo/logo.png" alt /></a>
+                <Link to="/"><img src="/assets/img/logo/logo.png" alt="img" /></Link>
               </div>  
             </div>
             <div className="col-lg-9 col-md-9">
@@ -39,8 +56,14 @@ const Navbar = () => {
                 </div>          
                 {/* Header-btn */}
                 <div className="header-btn d-none f-right d-lg-block">
-                  <Link to="/signup" className="btn head-btn1">Register</Link>
-                  <Link to="/login" className="btn head-btn2">Login</Link>
+                    {!currentUser ? (
+                      <>
+                        <Link to="/signup" className="btn head-btn1">Register</Link>
+                        <Link to="/login" className="btn head-btn2">Login</Link>
+                      </>
+                    ) : (
+                      <button onClick={handleLogout} className="btn head-btn2">Sign out</button>
+                    )}
                 </div>
               </div>
             </div>

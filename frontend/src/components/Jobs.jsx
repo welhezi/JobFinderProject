@@ -19,7 +19,7 @@ const Jobs = () => {
                         <div className="single-job-items mb-30">
                             <div className="job-items">
                                 <div className="company-img">
-                                    <a href="job_details.html"><img src="assets/img/icon/job-list1.png" alt /></a>
+                                    <a href="job_details.html"><img src="assets/img/icon/job-list1.png" alt="img" /></a>
                                 </div>
                                 <div className="job-tittle">
                                     <a href="job_details.html"><h4>Digital Marketer</h4></a>

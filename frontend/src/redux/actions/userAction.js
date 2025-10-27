@@ -29,3 +29,20 @@ export const loginAction = createAsyncThunk(
 
 
 )
+
+
+export const logoutAction = createAsyncThunk(
+  "user/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) throw new Error("No refresh token found");
+
+      const res = await axios.post("http://localhost:5000/user/logout", { refreshToken });
+      console.log("user log out was successful")
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);

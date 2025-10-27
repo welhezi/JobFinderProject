@@ -12,6 +12,8 @@ import PrivateRoute from './components/PrivateRoute';
 import Layouts from './pages/views/Layouts';
 import PostManagement from './pages/views/PostManagement';
 import Profile from './pages/views/Profile';
+import ApplicationsOfPost from './pages/views/ApplicationsOfPost';
+import JobDetails from './pages/JobDetails';
 
 
 function App() {
@@ -26,19 +28,17 @@ function App() {
         <Route path='/listjobs' element={<ListJobs/>}/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/job/:id" element={<JobDetails />} />
 
           {/* Routes protégées par token */}
-          <Route element={<PrivateRoute />}>
-            {/* Layout Dashboard */}
-            <Route path="/layout" element={<Layouts />}>
-              {/* Routes internes au dashboard */}
-              <Route path="postManagement" element={<PrivateRoute rolesAllowed={['employee']} />} >
-                <Route index element={<PostManagement />} />
-              </Route>
-              <Route path="profile" element={<Profile/>} />
-              {/* etc… autres routes enfants */}
-            </Route>
-          </Route>
+        
+            
+        <Route path="/layout" element={<PrivateRoute><Layouts/></PrivateRoute>}>
+              
+          <Route path="postManagement" element={<PrivateRoute rolesAllowed={['employee']}><PostManagement /></PrivateRoute>} />
+          <Route path="profile" element={<PrivateRoute rolesAllowed={['employee','admin']}><Profile/></PrivateRoute>} />
+          <Route path='appsOfPost/:id' element={<PrivateRoute rolesAllowed={['employee','admin']}><ApplicationsOfPost/></PrivateRoute>} />
+        </Route>
 
 
           

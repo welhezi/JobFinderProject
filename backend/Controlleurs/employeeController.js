@@ -2,6 +2,8 @@ const EmployeeModel = require("../Models/EmployeeModel");
 const UserModel = require("../Models/UserModel");
 const JobPostModel = require("../Models/JobPostModel");
 const bcrypt = require("bcrypt");
+
+
 // Créer un nouvel employé
 const createEmployee = async (req, res) => {
     try {

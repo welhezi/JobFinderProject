@@ -21,11 +21,15 @@ const Login = () => {
       console.log("user connected is : ",user)
       const role = user.role
       console.log("role",role)
-      switch (role){
-        case "employee" : navigate("/layout/postManagement")
-        default : navigate("/")
-        break;
+      switch (role) {
+        case "employee":
+          navigate("/layout/postManagement");
+          break;
+        default:
+          navigate("/");
+          break;
       }
+
     } catch (err) {
       console.error('Login failed', err);
     }
