@@ -21,9 +21,11 @@ const Sidebar = () => {
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, roles: ["admin"] },
     { text: 'Post Management', icon: <WorkIcon />, path: "/layout/postManagement", roles: ["employee"] },
-    { text: 'Employees Management', icon: <EngineeringIcon />, roles: ["admin"] },
-    { text: 'Candidates Management', icon: <GroupIcon />, roles: ["admin"] },
-    { text: 'Profile', icon: <AccountCircleIcon />, path: "/layout/profile", roles: ["employee", "admin"] }
+    { text: 'List Job Posts', icon: <WorkIcon />, path: "/layout/listPosts", roles: ["admin"] },
+    { text: 'Employees Management', icon: <EngineeringIcon />, path: "/layout/listEmployees", roles: ["admin"] },
+    //{ text: 'A Management', icon: <GroupIcon />, roles: ["employee","admin"] },
+    { text: 'Profile', icon: <AccountCircleIcon />, path: "/layout/profile", roles: ["employee"] },
+    { text: 'My Profile', icon: <AccountCircleIcon />, path: "/layout/adminProfile", roles: [ "admin"] }
   ];
 
   const isActive = (path) => location.pathname === path;

@@ -1,13 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getJobPostDetailsAction } from "../redux/actions/jobPostAction";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import CustomModel from "../components/materials/CustomModel";
+import { AddNewAppAction } from "../redux/actions/applicationAction";
+import * as Icons from '@mui/icons-material';
+import { Stack, TextField } from "@mui/material";
+import { CustomButton } from "../components/materials/CustomButton";
+import Swal from "sweetalert2";
 
 const JobDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const { currentUser } = useSelector((state) => state.user);
+    const user = currentUser?.user || {};
 
     const { selectedJob, isFetching, error } = useSelector(
         (state) => state.jobPosts
@@ -16,6 +24,64 @@ const JobDetails = () => {
     useEffect(() => {
         if (id) dispatch(getJobPostDetailsAction(id));
     }, [dispatch, id]);
+
+    const [openAdd,setOpenAdd] = useState(false)
+    const handleClose = () => { setOpenAdd(false)}
+
+    const [formData, setFormData] = useState({
+    cv: null,
+    cover_letter: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "cv") {
+      setFormData({ ...formData, cv: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+
+     const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("cv", formData.cv);
+      formDataToSend.append("cover_letter", formData.cover_letter);
+      formDataToSend.append("id_post", id);
+      formDataToSend.append("id_user", user._id);
+
+      await dispatch(AddNewAppAction(formDataToSend)).unwrap();
+      setOpenAdd(false);
+    } catch (error) {
+      console.error("Erreur d’ajout :", error);
+    }
+  };
+
+  const navigate = useNavigate();
+
+const handleApplyClick = () => {
+  if (!currentUser) {
+    Swal.fire({
+      title: "Connexion requise",
+      text: "Vous devez être connecté pour postuler à une offre.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Se connecter",
+      cancelButtonText: "Annuler",
+      confirmButtonColor: "#210f72",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/login");
+      }
+    });
+  } else {
+    setOpenAdd(true);
+  }
+};
+
+    
 
     return (
         <>
@@ -75,9 +141,10 @@ const JobDetails = () => {
                                     ← Back to Jobs
                                 </Link>
 
-                                <Link to={`/apply/${selectedJob._id}`} className="btn btn-primary">
-                                    Postuler
-                                </Link>
+                                <button onClick={handleApplyClick} className="btn btn-primary">
+  Postuler
+</button>
+
                             </div>
 
                         </div>
@@ -88,6 +155,30 @@ const JobDetails = () => {
                         <p>No job details available.</p>
                     )}
                 </div>
+
+                
+      {/* ✅ Modal d’ajout de condidature */}
+      <CustomModel
+        title="Add new Application"
+        open={openAdd}
+        handleClose={handleClose}
+        icon={<Icons.AddCircleOutline />}
+      >
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={2}>
+            <input type="file" name="cv" onChange={handleChange} />
+            <TextField
+              label="Cover Letter"
+              name="cover_letter"
+              value={formData.cover_letter}
+              onChange={handleChange}
+              fullWidth
+            />
+            <CustomButton title="Save" color="#210f72ff" type="submit" />
+          </Stack>
+        </form>
+      </CustomModel>
+      
 
                 <Footer />
             </div>

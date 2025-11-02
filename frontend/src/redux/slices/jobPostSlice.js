@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { getAllJobPostsAction, getJobPostDetailsAction } from "../actions/jobPostAction"
+import { getAllJobPostsAction, getAllPostsOfEmployeeAction, getJobPostDetailsAction } from "../actions/jobPostAction"
 
 const initialState = {
     jobPost : [],
@@ -46,7 +46,21 @@ const jobPostSlice = createSlice({
       .addCase(getJobPostDetailsAction.rejected, (state, { payload }) => {
         state.isFetching = false;
         state.error = payload;
-      });
+      })
+
+    //get posts by id employee
+    .addCase(getAllPostsOfEmployeeAction.pending, (state) => {
+        state.isFetching = true;
+        state.error = null;
+      })
+      .addCase(getAllPostsOfEmployeeAction.fulfilled, (state, { payload }) => {
+        state.isFetching = false;
+        state.selectedJob = payload;
+      })
+      .addCase(getAllPostsOfEmployeeAction.rejected, (state, { payload }) => {
+        state.isFetching = false;
+        state.error = payload;
+      })
 
 }
 })

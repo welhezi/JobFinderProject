@@ -7,10 +7,13 @@ const authentificated = require("../Middleware/authentificated");
 router.post("/add",authentificated, JobPostController.createJobPost);
 
 // Récupérer tous les Job Posts
-router.get("/get",authentificated, JobPostController.getAllJobPosts);
+router.get("/get", JobPostController.getAllJobPosts);
+
+//posts of employee
+router.get("/getbyIdEmployee/:id_employee",authentificated, JobPostController.getAllPostsByIdEmployee);
 
 // Récupérer les detailos d'un Job Post
-router.get("/get/:id",authentificated, JobPostController.getJobPostDetailsById);
+router.get("/get/:id", JobPostController.getJobPostDetailsById);
 
 // del Job Post
 router.delete("/del/:id",authentificated, JobPostController.deletePost);

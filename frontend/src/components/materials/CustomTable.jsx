@@ -11,17 +11,17 @@ import { Tooltip, IconButton } from '@mui/material';
 const CustomTable = ({ rows, columns, actions }) => {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="custom table">
+      <Table sx={{ minWidth: 650 }}  aria-label="custom table">
         {/* ==== Table Header ==== */}
         <TableHead>
           <TableRow>
             {columns.map((col) => (
-              <TableCell key={col.field} align="center">
-                {col.label}
+              <TableCell sx={{backgroundColor: "#e8e8e8ff", color : '#2d0e7bff'}} key={col.field} align="center">
+                <b>{col.label}</b>
               </TableCell>
             ))}
 
-            {actions?.length > 0 && <TableCell align="center">Actions</TableCell>}
+            {actions?.length > 0 && <TableCell sx={{backgroundColor: "#e8e8e8ff", color : '#2d0e7bff'}} align="center"><b>Actions</b></TableCell>}
           </TableRow>
         </TableHead>
 

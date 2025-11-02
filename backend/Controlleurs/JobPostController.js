@@ -56,11 +56,27 @@ const getAllJobPosts = async (req, res) => {
 };
 
 
+const getAllPostsByIdEmployee = async (req, res) => {
+    try {
+        const {id_employee} = req.params
+        const employee = EmployeeModel.findById(id_employee)
+        if(!employee) {
+            return res.status(500).json({message : "employee not found"})
+        }
+        const jobPosts = await JobPostModel.find({id_employee, isDeleted: false}) // 🔹 filtrer uniquement les posts non supprimés
+            .populate("id_employee", "-__v"); // Info sur l'employé sans champs techniques
+        return res.status(200).json({ message: "Job posts :", data: jobPosts });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+
 
 const getJobPostDetailsById = async (req, res) => {
     try {
         const jobPostId = req.params.id
-        const jobPostDetails = await JobPostModel.findById(jobPostId)
+        const jobPostDetails = await JobPostModel.findById(jobPostId).populate("id_employee", "-__v");
         return res.status(200).json({ message: "Job posts details", data: jobPostDetails });
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -134,7 +150,7 @@ const deletePost = async (req,res) => {
 
 
 
-module.exports = { createJobPost, getAllJobPosts,getJobPostDetailsById ,updatePost,deletePost};
+module.exports = { createJobPost, getAllJobPosts,getJobPostDetailsById ,updatePost,deletePost,getAllPostsByIdEmployee};
 
 
 

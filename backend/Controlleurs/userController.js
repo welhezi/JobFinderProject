@@ -128,12 +128,14 @@ const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { firstName, lastName, password, email, cv, address } = req.body;
+    const { firstName,birthday,civility, lastName, password, email, cv, address } = req.body;
 
     // 1️⃣ Créer un objet de mise à jour
     const updatedData = {
       firstName,
       lastName,
+      birthday,
+      civility,
       cv,
       address,
     };
@@ -148,7 +150,7 @@ const updateProfile = async (req, res) => {
 
     // 3️⃣ Si une image est envoyée
     if (req.file) {
-      updatedData.image = `/uploads/${req.file.filename}`;
+      updatedData.image = `${req.file.filename}`;
     }
 
     // 4️⃣ Si le mot de passe est fourni → on le hache
@@ -245,9 +247,26 @@ const resetPassword = async (req, res) => {
 };
 
 
+const getAllEmployees = async (req, res) => {
+    try {
+        const users = await UserModel.find({ isDeleted: false,role: "employee" }) 
+            .populate("jobs", "-__v"); // Info sur l'employé sans champs techniques
+
+        return res.status(200).json({ message: "users are :", data: users });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
 
 
-module.exports = { register, login, logout,getUserProfile,updateProfile,deleteUser,forgetPassword,resetPassword};
+
+
+
+module.exports = { 
+  register, 
+  login, 
+  logout,getUserProfile,updateProfile,deleteUser,forgetPassword,resetPassword,
+  getAllEmployees};
 
 
 

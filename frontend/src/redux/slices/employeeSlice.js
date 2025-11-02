@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { registerEmployeeAction } from "../actions/employeeAction"
+import { registerEmployeeAction, updateEmployeeAction } from "../actions/employeeAction"
 
 
 const initialState = {
@@ -11,9 +11,16 @@ const initialState = {
 const employeeSlice = createSlice({
     name: "employee",
     initialState,
-    reducers:{},
+    reducers:{
+        // 🔹 Nouvelle action pour mettre à jour le currentUser
+       /* setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        },*/
+    },
     extraReducers : (builder) => {
     builder
+
+    //add
     .addCase(registerEmployeeAction.pending,(state)=>
         {
         state.isFetching=true
@@ -32,8 +39,28 @@ const employeeSlice = createSlice({
     })
 
 
+    // 🔹 Update employee
+    .addCase(updateEmployeeAction.pending, (state) => {
+        state.isFetching = true;
+        state.error = null;
+    })
+    .addCase(updateEmployeeAction.fulfilled, (state, { payload }) => {
+        state.isFetching = false;
+        state.error = null;
+        state.currentUser = payload; // mettre à jour l'utilisateur
+    })
+    .addCase(updateEmployeeAction.rejected, (state, { payload }) => {
+        state.isFetching = false;
+        state.error = payload;
+    })
 
-        }
+
+
+
+
+
+}
 })
 
+//export const { setCurrentUser } = employeeSlice.actions;
 export default employeeSlice.reducer

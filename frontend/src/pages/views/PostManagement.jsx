@@ -5,13 +5,14 @@ import { CustomButton } from '../../components/materials/CustomButton';
 import * as Icons from '@mui/icons-material';
 import { CustomTable } from '../../components/materials/CustomTable';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddNewJobPostAction, delJobPostAction, getAllJobPostsAction, getJobPostDetailsAction, updateJobPostAction } from '../../redux/actions/jobPostAction';
+import { AddNewJobPostAction, delJobPostAction, getAllJobPostsAction, getAllPostsOfEmployeeAction, getJobPostDetailsAction, updateJobPostAction } from '../../redux/actions/jobPostAction';
 import PaginationUX from '../../components/materials/PaginationUX';
 import CustomModel from '../../components/materials/CustomModel';
 import DeleteModal from '../../components/materials/DeleteModal';
 import Swal from 'sweetalert2';
 import { getApplicationsByPostIdAction } from '../../redux/actions/applicationAction';
 import { Link } from 'react-router-dom';
+import CustomCardList from '../../components/materials/CustomCardList';
 
 
 
@@ -48,13 +49,14 @@ const PostManagement = () => {
 
 
 
-
+    const [employeePosts, setEmployeePosts] = useState([]);
     const dispatch = useDispatch()
     useEffect(() => {
     const fetchData = async () => {
       try {
-        const resultAction = await dispatch(getAllJobPostsAction()).unwrap(); // <-- important
+        const resultAction = await dispatch(getAllPostsOfEmployeeAction(id)).unwrap(); // <-- important
         console.log("Result action :", resultAction);
+        setEmployeePosts(resultAction);
       } catch (error) {
         console.error("Erreur de récupération :", error);
       }
@@ -245,13 +247,13 @@ const handleEditSubmit = async (e) => {
   { field: "applications", 
     label: "Applications",
     renderCell: (row) => (
-      <Link to={`/layout/appsOfPost/${row._id}`}>
-      <Typography 
-        sx={{ cursor: 'pointer', color: '#210f72ff', textDecoration: 'underline' }}
-      >
-        View Applications
+      <Typography component="div">
+        <Link to={`/layout/appsOfPost/${row._id}`}>
+        <Typography component="span" sx={{ cursor: 'pointer', color: '#210f72ff', textDecoration: 'underline' }}>
+          View Applications
+        </Typography>
+        </Link>
       </Typography>
-      </Link>
     ) }
 ];
 
@@ -288,12 +290,12 @@ const actionsTab = [
 const [currentPage,setCurrentPage] = useState(1)
 const rowsPerPage = 10
 
-const allPosts = useSelector(state => state?.jobPosts?.jobPost || [])
-console.log("allPosts value:", allPosts)
+//const allPosts = useSelector(state => state?.jobPosts?.jobPost || [])
+//console.log("allPosts value:", allPosts)
 
-const totalPages = Math.ceil((allPosts?.length || 0) / rowsPerPage);
+const totalPages = Math.ceil((employeePosts?.length || 0) / rowsPerPage);
 
-const paginatedRows = allPosts.slice(
+const paginatedRows = employeePosts.slice(
   (currentPage - 1) * rowsPerPage,
   currentPage * rowsPerPage
 ) || [];
@@ -317,7 +319,11 @@ const paginatedRows = allPosts.slice(
       <CustomButton  title="Add new Post" color={'#210f72ff'} icon={<Icons.AddCircleOutline/>} onClick={() => setOpenAdd(true)}/>
     </Stack>
     
-    <CustomTable rows={paginatedRows} columns={columns} actions={actionsTab} />
+    {/*<CustomTable rows={paginatedRows} columns={columns} actions={actionsTab} />*/}
+    <Box sx={{ mt: 4 }}>
+      <CustomCardList rows={paginatedRows} columns={columns} actions={actionsTab} />
+    </Box>
+
       
     <Box>
       <PaginationUX count={totalPages} onChange={handlePageChange} page={currentPage} color={'#210f72ff'} />

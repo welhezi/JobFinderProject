@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { loginAction, logoutAction, registerAction } from "../actions/userAction"
+import { delEmployeeAction, getAllmployeesAction, loginAction, logoutAction, registerAction, updateUserAction } from "../actions/userAction"
 
 const initialState = {
     currentUser : null,
+    employees : [],
     isFetching : false,
     error : false
 }
@@ -11,7 +12,11 @@ const initialState = {
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers:{},
+    reducers:{
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        },
+    },
     extraReducers : (builder) => {
     builder
     .addCase(registerAction.pending,(state)=>
@@ -77,10 +82,74 @@ const userSlice = createSlice({
     state.error=payload
     })
 
+//getallEmployees
+    .addCase(getAllmployeesAction.pending,(state)=>
+        {
+        state.isFetching=true
+        state.error=null
+        })
+    .addCase(getAllmployeesAction.fulfilled,(state,{payload})=>
+        {
+        state.isFetching=false
+        state.error=null
+        state.employees=payload
+        })
+    .addCase(getAllmployeesAction.rejected,(state,{payload})=>
+    {
+    state.isFetching=false
+    state.error=payload
+    })
+
+    //delete
+    .addCase(delEmployeeAction.pending,(state)=>
+        {
+        state.isFetching=true
+        state.error=null
+        })
+    .addCase(delEmployeeAction.fulfilled,(state,{payload})=>
+        {
+        state.isFetching=false
+        state.error=null
+        state.employees=payload
+        })
+    .addCase(delEmployeeAction.rejected,(state,{payload})=>
+    {
+    state.isFetching=false
+    state.error=payload
+    })
+
+    //update
+    .addCase(updateUserAction.pending,(state)=>
+        {
+        state.isFetching=true
+        state.error=null
+        })
+    .addCase(updateUserAction.fulfilled,(state,action)=>
+        {
+        if (state.currentUser) {
+          state.currentUser.user = action.payload;
+        }
+        state.isFetching=false
+        state.error=null
+        
+        })
+    .addCase(updateUserAction.rejected,(state,{payload})=>
+    {
+    state.isFetching=false
+    state.error=payload
+    })
+
+
+
+
+
+
+
 
 
 
 }
 })
 
+export const { setCurrentUser } = userSlice.actions;
 export default userSlice.reducer

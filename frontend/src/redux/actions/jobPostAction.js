@@ -4,12 +4,34 @@ import axios from "axios"
 export const getAllJobPostsAction = createAsyncThunk(
   "jobPosts/get",
   async (_, { rejectWithValue }) => {
+    //const accessToken = localStorage.getItem("accessToken");
+    //if (!accessToken) return rejectWithValue("No access token found");
+
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/jobpost/get",
+        //{ headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      console.log("new data ", res.data.data);
+      return res.data.data; // ✅ tableau des posts
+    } catch (error) {
+      console.error("Axios error :", error);
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+
+
+export const getAllPostsOfEmployeeAction = createAsyncThunk(
+  "jobPosts/getbyidEmployee",
+  async (id_employee, { rejectWithValue }) => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) return rejectWithValue("No access token found");
 
     try {
       const res = await axios.get(
-        "http://localhost:5000/jobpost/get",
+        `http://localhost:5000/jobpost/getbyIdEmployee/${id_employee}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       console.log("new data ", res.data.data);
@@ -50,12 +72,13 @@ export const AddNewJobPostAction = createAsyncThunk(
 export const getJobPostDetailsAction = createAsyncThunk(
   "jobPosts/getbyid",
   async (id, { rejectWithValue }) => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) return rejectWithValue("No access token found");
+    //const accessToken = localStorage.getItem("accessToken");
+    //if (!accessToken) return rejectWithValue("No access token found");
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/jobpost/get/${id}`,{ headers: { Authorization: `Bearer ${accessToken}` } }
+        `http://localhost:5000/jobpost/get/${id}`,
+        //{ headers: { Authorization: `Bearer ${accessToken}` } }
       );
       console.log(" post details : ", res.data.data);
       return res.data.data; 

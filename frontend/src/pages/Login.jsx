@@ -25,6 +25,9 @@ const Login = () => {
         case "employee":
           navigate("/layout/postManagement");
           break;
+        case "admin":
+          navigate("/layout/listPosts");
+          break;
         default:
           navigate("/");
           break;
